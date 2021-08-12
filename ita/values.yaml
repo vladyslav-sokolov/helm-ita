@@ -1,0 +1,46 @@
+appName: APP_NAME
+
+configMap:
+  ENVIRONMENT: "dev"
+
+service:
+  portName: http
+  type: NodePort
+  port: 8080
+  targetPort: 8080
+
+replicaCount: 1
+
+container:
+  name: APP_NAME
+  image:
+    repository: gcr.io/ita/APP_NAME
+  ports:
+    - containerPort: 8080
+  resources:
+      requests:
+          memory: "128Mi"
+          cpu: "250m"
+      limits:
+          memory: "256Mi"
+          cpu: "500m"
+  livenessProbe:
+      failureThreshold: 3
+      successThreshold: 1
+      initialDelaySeconds: 40
+      periodSeconds: 20
+      timeoutSeconds: 2
+      httpGet:
+         path: /liveness_check
+         port: 8080
+         scheme: HTTP
+  readinessProbe:
+      failureThreshold: 3
+      successThreshold: 1
+      initialDelaySeconds: 25
+      periodSeconds: 5
+      timeoutSeconds: 4
+      httpGet:
+         path: /status
+         port: 8080
+         scheme: HTTP

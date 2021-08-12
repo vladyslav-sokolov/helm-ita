@@ -1,0 +1,21 @@
+{{- if .Values.service }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.svcName | default (printf "%s" (include "app.name" .)) | lower }}
+  namespace: {{ .Release.Namespace | default "default" | lower }}
+  labels:
+    {{- include "app.selectorLabels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - name: {{ .Values.service.portName }}
+      port: {{ .Values.service.port }}
+      protocol: {{ .Values.service.protocol | default "TCP" }}
+      targetPort: {{ .Values.service.targetPort }}
+      {{- if .Values.service.nodePort }}
+      nodePort: {{ .Values.service.nodePort }}
+      {{- end}}
+  selector:
+    {{- include "app.selectorLabels" . | nindent 4 }}
+{{- end }}

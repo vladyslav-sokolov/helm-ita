@@ -1,0 +1,59 @@
+{{- if .Values.container }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "app.name" . }}
+  namespace: {{ .Release.Namespace | default "default" | lower }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    rollingUpdate:
+      maxSurge: {{ default "30%" .Values.maxSurge }}
+      maxUnavailable: {{ default "30%" .Values.maxUnavailable }}
+  selector:
+    matchLabels:
+      {{- include "app.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      name: {{ include "app.name" . }}
+      labels:
+        {{- include "app.selectorLabels" . | nindent 8 }}
+    spec:
+      affinity:
+          podAntiAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 10
+                  podAffinityTerm:
+                      labelSelector:
+                          matchExpressions:
+                            - key: app
+                              operator: In
+                              values:
+                                - {{ include "app.name" . | lower }}
+                      topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: {{ .Values.container.name }}
+          image: {{ .Values.container.image.repository }}{{ if .Values.container.image.tag }}{{ printf ":%s" .Values.container.image.tag }}{{ end }}
+          imagePullPolicy: {{ .Values.container.image.pullPolicy | default "IfNotPresent" }}
+          envFrom:
+            {{- if .Values.configMap}}
+            - configMapRef:
+                name: {{ include "app.name" . }}
+            {{- end }}
+          {{- if .Values.container.ports }}
+          ports:
+            {{- toYaml .Values.container.ports | nindent 12 }}
+            {{- end }}
+          {{- if .Values.container.resources }}
+          resources:
+            {{- toYaml .Values.container.resources | nindent 12 }}
+            {{- end }}
+          {{- if .Values.container.livenessProbe }}
+          livenessProbe:
+            {{- toYaml .Values.container.livenessProbe | nindent 12 }}
+            {{- end }}
+          {{- if .Values.container.readinessProbe }}
+          readinessProbe:
+            {{- toYaml .Values.container.readinessProbe | nindent 12 }}
+            {{- end }}
+{{- end }}
