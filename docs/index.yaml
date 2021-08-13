@@ -2,7 +2,16 @@ apiVersion: v1
 entries:
   ita:
   - apiVersion: v2
-    created: "2021-08-12T23:03:49.343369+03:00"
+    created: "2021-08-13T11:45:28.859228+03:00"
+    description: Base ita app deployment.
+    digest: e07aa3f5e85f426e752e47e21da6cd51266f18d1bea30319fdab76d1f9d8525b
+    name: ita
+    type: application
+    urls:
+    - https://sweewo.github.io/helm-ita/ita-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
+    created: "2021-08-13T11:45:28.859069+03:00"
     description: Base ita app deployment.
     digest: fde0edf22b57029a6fd164128639e1809b105307d42c8de8630d8eac3e909ea5
     name: ita
@@ -10,4 +19,4 @@ entries:
     urls:
     - https://sweewo.github.io/helm-ita/ita-0.1.0.tgz
     version: 0.1.0
-generated: "2021-08-12T23:03:49.342867+03:00"
+generated: "2021-08-13T11:45:28.857959+03:00"

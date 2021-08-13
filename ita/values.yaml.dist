@@ -1,4 +1,4 @@
-appName: APP_NAME
+appName: app-name
 
 configMap:
   ENVIRONMENT: "dev"
@@ -9,12 +9,15 @@ service:
   port: 8080
   targetPort: 8080
 
+secret:
+  foo: YmFyCg==
+
 replicaCount: 1
 
 container:
-  name: APP_NAME
+  name: app-name
   image:
-    repository: gcr.io/ita/APP_NAME
+    repository: gcr.io/ita/app-name
   ports:
     - containerPort: 8080
   resources:
